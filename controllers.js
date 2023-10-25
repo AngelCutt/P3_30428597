@@ -7,7 +7,7 @@ const path = require('path');
 
 //-----------------------------------------------------------------
 
-//recursos que se van a cargar 
+//recursos que se van a cargar en el server 
 app.use(express.static(__dirname+'/static'));
 
 //-----------------------------------------------------------------
