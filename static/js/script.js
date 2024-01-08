@@ -14,7 +14,6 @@ ulTabla3[k].classList.toggle('claseTabla3-JS');
 //--------------------------------
 //-
 }
-
 //-----------------------------------------------------------------
  function buscarProductos(){
   
@@ -35,7 +34,7 @@ ulTabla3[k].classList.toggle('claseTabla3-JS');
   .then(res=>{
    console.log(res.producto[0],'datos recibidos desde el servidor');
     // Redirige al cliente a la plantilla 'prueba.ejs' con los datos recibidos   "{-_-}" si pude "[-_-]"
-   let url =`/ruta?nombre=${res.producto[0].nombre}&codigo=${res.producto[0].codigo}&precio=${res.producto[0].precio}&descripcion=${res.producto[0].descripcion}&cantidad=${res.producto[0].cantidad}&url=${res.producto[0].url}&calidad=${res.producto[0].calidad}`;
+   let url =`/ruta?nombre=${res.producto[0].nombre}&codigo=${res.producto[0].codigo}&precio=${res.producto[0].precio}&descripcion=${res.producto[0].descripcion}&cantidad=${res.producto[0].cantidad}&url=${res.producto[0].url}&calidad=${res.producto[0].calidad}&id=${res.producto[0].producto_id}`;
    
   window.location.href = url;
   })

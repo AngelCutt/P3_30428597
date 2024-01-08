@@ -26,6 +26,9 @@
                 width:60%;
                 height:50vh;
             }
+            .imagenCarrito{
+             margin-top:1rem;
+            }
             @media screen and (max-width: 720px){
              .clase{
                 display:flex;
@@ -85,9 +88,11 @@
           <!--Randy estuvo aqui-->
           <p style='font-size: 20px;'><span style='font-weight:bold;font-size:20px;'>Descripcion:</span> <%= result.descripcion %></p>
           <p style='font-size: 20px;'><span style='font-weight:bold;font-size:20px;'>Calidad:</span> <%= result.calidad %></p>
-          <p style='font-size: 20px;'><span style='font-weight:bold;font-size:20px;'>Cantidad:</span> <%= result.cantidad %></p>  
+          <p style='font-size: 20px;'><span style='font-weight:bold;font-size:20px;'>Cantidad:</span> <%= result.cantidad %></p>
+
+                  <a href="/comprar/<%=result.id%>" class='imagenCarrito'><img src="/img/carrito.png" width="40"></a>
+  
           </div>
-        
 
         </div>
         
@@ -129,6 +134,12 @@
          let cantidad = document.createElement('P');
          let div = document.createElement('DIV');
          let div2 = document.createElement('DIV');
+         let a = document.createElement('A');
+         let imgCarrito = document.createElement('IMG');
+         imgCarrito.src='/img/carrito.png';
+         imgCarrito.style='width:40px';
+         a.href='/comprar/<%=result.id%>';
+         a.append(imgCarrito);
          div2.style='display:flex;flex-direction:column;justify-content:center;aling-item:center;margin-left:30px';
          div.style='display:flex;justify-content:center;aling-item:center;margin-top:40px;width:100%';
          div.classList.add('clase');
@@ -152,6 +163,7 @@
          div2.append(descripcion);
          div2.append(calidad);
          div2.append(cantidad);
+         div2.append(a);
          div.append(img);
          div.append(div2);
          fragmento.append(div);

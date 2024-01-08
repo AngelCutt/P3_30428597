@@ -6,16 +6,18 @@
 	<title>Imagen</title>
 
 	<style type="text/css">
+    @font-face{
+		font-family:'dali';
+		src:url('/fuentes/Zombie Predator TTF Personal.ttf');
+	   }
+	body{
+			background-image:url('https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+			background-attachment: fixed;
+			background-size: cover;
+			background-position:top;
+			color:white;
+		}
 
-@font-face{
-          font-family:'dar';
-          src:url('/fuentes/GnarlyBoneBlack_PERSONAL_USE_ONLY.otf');
-        }
-		body{
-	background-image:url('https://images.unsplash.com/photo-1598522017610-edbea54edd64?auto=format&fit=crop&q=80&w=1036&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-	background-size:cover;
-	background-attachment: fixed;
-    }
     form{
     	display: flex;
     	flex-direction: column;
@@ -24,6 +26,7 @@
     	margin:80px auto;
     	width:40%;
     	border:1px solid black;
+    	border-radius: 20px;
     }
     input{
     	padding:10px;
@@ -35,7 +38,7 @@
     	color:white;
     }
    h1{
-   	font:40px 'dar' ;
+   	font:40px 'dali' ;
    	text-align: center;
    	line-height: 50px;
    	color:white;
@@ -49,6 +52,7 @@
   	width:70%;
   	margin:50px auto;
   	background:rgba(108, 114, 114,.7);
+  	border-radius:50%;
   }
   #botones{
 	display:flex;

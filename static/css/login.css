@@ -1,3 +1,7 @@
+@font-face{
+            font-family:'dali';
+            src:url('/fuentes/Zombie Predator TTF Personal.ttf');
+           }
 body{
 	background-image:url(/img/login.jpg);
 	background-size:cover;
@@ -9,8 +13,9 @@ body{
 	justify-content: center;
 	align-items:center;
 	background:rgb(0,0,0,.7);
-	width:50%;
+	width:40%;
 	height:40vh;
+	padding:2rem;
 	margin:50px auto;
 	border-radius:10px 10px 10px 10px;
 }
@@ -22,6 +27,7 @@ label{
 h1{
 	text-align:center;
 	font-weight: unset;
+	font:2rem 'dali';
 }
 form{
 	display:flex;
@@ -32,10 +38,15 @@ form{
 input{
 padding:8px;
 border-radius:10px 10px 10px 10px;
+text-align: center;
 }
 #iniciar{
 	margin-top:10px;
 	padding: 7px;
-	border-radius:10px 10px 10px 10px;
+	border-radius:10px 10px 10px 10px;ç
+	transition:all 1s;
 }
-#inicia
+#iniciar:hover{
+	cursor: pointer;
+	transform: scale(1.2);
+}
