@@ -4,7 +4,49 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/x-icon" href="img/limpieza.png" />
-	<title>Comprar</title>
+	 <title><%= og.title %></title>
+    <meta name="description" content="<%= og.description %>">
+    <meta property="og:title" content="<%= og.title %>">
+    <meta property="og:description" content="<%= og.description %>">
+  <meta property="og:image" content="<%= og.image %>">
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDYBWY97KW"></script>
+<!--Google Analytics-->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-WDYBWY97KW');
+</script>
+<!--Schema Markup-->
+ <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Limpieza",
+    "datePublished": "2024-01-15",
+    "author": {
+      "@type":"Person",
+      "name": "Angel Cutt"
+    },
+    "publisher":{
+      "@type": "Organization",
+      "name": "productClean",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://images.pexels.com/photos/4440533/pexels-photo-4440533.jpeg?auto=compress&cs=tinysrgb&w=400"
+      }
+    },
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://images.pexels.com/photos/4440533/pexels-photo-4440533.jpeg?auto=compress&cs=tinysrgb&w=400",
+      "width": "700",
+      "height": "500"
+    },
+    "description": "Productos de limpieza con la mas alta eficiencia"
+  }
+  </script>
 	<style type="text/css">
 		*{
 			margin:0;

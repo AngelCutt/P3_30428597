@@ -6,6 +6,31 @@ const ip = require('ip');
 const axios = require('axios');
 const { secretKey,apiKey} = process.env;
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
+
+//Mnesaje de Bienvenida
+const transporter = nodemailer.createTransport({
+  service:'Gmail',
+  auth:{
+    user:'angelguillermocuttdiaz@gmail.com',
+    pass:'nssljzjrchykrbqu'
+  }
+});
+
+
+//Mensaje de recuperacion
+const transporter2 = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'angelguillermocuttdiaz@gmail.com',
+    pass: 'nssljzjrchykrbqu'
+  }
+});
+
 
 // Crear la base de datos
 const dbname = path.join(__dirname,'../db','base.db');
@@ -91,6 +116,14 @@ BEGIN
     AND ip_cliente = new.ip_cliente;
 END;
 `);
+
+db.run(`CREATE TABLE IF NOT EXISTS puntuaciones (
+  puntuacionID INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre_de_usuario TEXT NOT NULL,
+  puntuacion INTEGER NOT NULL,
+  producto_id INTEGER,
+  FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
+);`);
 
 });
 
@@ -187,19 +220,33 @@ function deletee(req,res){
 
 //_-------------------------------------------------
 function aggIMG(req,res){
+
 const id = req.params.id;
 const file = `/uploads/${req.file.filename}`;
 const rutaAbsoluta = `${req.protocol}://${req.get('host')}${file}`;
-console.log(file);
+console.log(file,'---dato de la funcion aggIMG---');
 const {destacado} = req.body;
 const sql = `INSERT INTO imagenes(url,destacado,productoID) 
-    VALUES (?,?,?)`;
-
-db.run(sql, [rutaAbsoluta,destacado,id], err => {
+ VALUES (?,?,?)`;
+    db.run(sql, [rutaAbsoluta,destacado,id], err =>{
     if (err) return console.error(err.message);
     console.log('URL de imagen Insertada Correctamente');
     res.redirect('/productos');
 });
+  /* const id = req.params.id;
+   console.log(req.file);
+  let ruta = req.file.path.split('\\');
+  const file = `/${ruta[1]}/${ruta[2]}`;
+  console.log(file);
+  const {destacado} = req.body;
+  const sql = `INSERT INTO imagenes(url,destacado,productoID) 
+  VALUES (?,?,?)`;
+
+  db.run(sql, [file,destacado,id], err => {
+    if (err) return console.error(err.message);
+    console.log('URL de imagen Insertada Correctamente');
+    res.redirect('/productos');
+  });*/
 
 }
 //----------------------------------------------------
@@ -302,9 +349,10 @@ db.all(sql,[busqueda,busqueda,busqueda,busqueda,busqueda],(err,rows)=>{
 //-------------------------------------------------------
   function ClientesGET(req,res){
   
-  const sql =`SELECT p.*, i.url AS imagen_url
+  const sql =`SELECT p.*, i.url AS imagen_url, pu.puntuacion
              FROM productos p
              LEFT JOIN imagenes i ON p.producto_id = i.productoID
+             LEFT JOIN puntuaciones pu ON p.producto_id = pu.producto_id
              WHERE i.destacado = 1
              GROUP BY p.producto_id`;
 
@@ -320,7 +368,13 @@ db.all(sql,[busqueda,busqueda,busqueda,busqueda,busqueda],(err,rows)=>{
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
       // Envío de la respuesta con los resultados
       res.render('clientes.ejs',{
-        producto:rowsProduct
+        producto:rowsProduct,
+         og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
       });
       
 
@@ -342,7 +396,13 @@ function detalles(req,res){
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
       // Envío de la respuesta con los resultados
       res.render('detalles.ejs',{
-        imagenes:rowsImagenes
+        imagenes:rowsImagenes,
+        og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
       });
 
   });
@@ -362,11 +422,25 @@ const sql = ` DELETE FROM categorias WHERE id = ?`;
 
 //--------------------------------------------------
 function loginUsers(req,res){
-  res.render('loginUsers.ejs');
+  res.render('loginUsers.ejs',{
+    og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
+  });
 }
 //_-------------------------------------------------
 function registroUsers(req,res){
-  res.render('registroUsers.ejs');
+  res.render('registroUsers.ejs',{
+     og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
+  });
 }
 //--------------------------------------------------
 function registroUsuariosPost(req,res){
@@ -379,6 +453,23 @@ function registroUsuariosPost(req,res){
  if(e) return console.error(e.message);
 
  res.cookie('registro','exito',{httpOnly:true,secure:true});
+ const mensaje = {
+  from:'angelguillermocuttdiaz@gmail.com',
+  to:email,
+  subject:'!Bienvenido¡',
+  text:`Hola ${nombre} ${apellido}, !Te damos la Bienvenida a una de las mejores páginas de venta y compra de Smarphone, donde podras encontrar gran variedad de productos y marcas¡`
+  }
+
+  transporter.sendMail(mensaje,(error,info)=>{
+
+   if(error){
+   console.log(error.message);
+   }else{
+    console.log(`Mensaje de Bienvenida enviado Exitosamente ${info.response}`);
+   }
+
+  })
+
  res.redirect('/loginUsers');
  });
 
@@ -391,7 +482,8 @@ function postLoginCliente(req,res){
   const dato = {
     email:email,
     password:password,
-    cedula:''
+    cedula:'',
+    nombre:''
   }
 
   const sql = 'SELECT * FROM usuarios WHERE correo = ? AND password = ?';
@@ -404,6 +496,7 @@ if(datos){
 
  if(datos.correo == dato.email && datos.password == dato.password){
   dato.cedula=datos.cedula;
+  dato.nombre=datos.nombre;
   const token = jwt.sign({user:dato},secretKey,{expiresIn:60 * 60 * 24});
 
    // Guardar token en cookies
@@ -448,7 +541,13 @@ console.log(data[0]);
 
  res.render('comprar.ejs',{
         resultado:data[0],
-        ip:{ipAddress,cedula}
+        ip:{ipAddress,cedula},
+      og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
       });
 
 });
@@ -456,7 +555,7 @@ console.log(data[0]);
 }
 //--------------------------------------------------
 async function comprarPOST(req,res){
-
+const destinatario = req.user.email;
 let data;
 
 const {nombre_de_usuario,apellido,cedula,telefono,cliente_id,producto_id,cantidad,total_pagado,codigo,ip_cliente,numeroT,cvv,mesV,year,currency,descripcion} = req.body;
@@ -498,6 +597,25 @@ VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 db.run(sql,[nombre_de_usuario,apellido,cedula,telefono,cliente_id,producto_id,cantidad,total_pagado,ip_cliente,codigo,numeroT,cvv,mesV,year,currency,descripcion],(err)=>{
   if(err) return console.error(err.message);
+    
+     const mailOptions = {
+    from: 'angelguillermocuttdiaz@gmail.com', // Reemplaza con tu dirección de correo electrónico
+    to: destinatario, // Reemplaza con la dirección de correo del cliente
+    subject:'Mensaje de confirmación', // Reemplaza con el asunto del correo electrónico
+    text: 'Compra realizada de manera exitosa desde nuestra grandiosa pagina web' // Reemplaza con el contenido del correo electrónico en texto sin formato
+  };
+
+  // Envía el correo electrónico
+  transporter2.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error al enviar el correo electrónico:', error);
+      res.status(500).send('Ha ocurrido un error al enviar el correo electrónico de confirmación.');
+    } else {
+      console.log('Correo electrónico enviado:', info.response);
+      res.status(200).send('El correo electrónico de confirmación ha sido enviado correctamente.');
+    }
+  });
+
 
     res.redirect('/clientes');
    
@@ -587,6 +705,136 @@ function deleteCompra(req,res){
     res.redirect('/compras');
   })
 }
+
+function puntuaciones(req,res){
+
+const UserName = req.user.nombre;
+
+const {puntuacion,idProducto} = req.body;
+
+console.log(` puntuacion ${puntuacion} del producto con el id : ${idProducto} nombre del usuario ${UserName}`);
+
+const sql = `SELECT * FROM puntuaciones WHERE producto_id = ?`;
+
+db.get(sql,[idProducto],(error,datos)=>{
+
+  // Obtener la puntuación actual del producto
+  //                               operador ternario
+  const puntuacionActual = datos ? datos.puntuacion : 0;
+   
+  // Calcular la nueva puntuación sumando la puntuación actual con la nueva puntuación
+  const nuevaPuntuacion = puntuacionActual + puntuacion;
+
+
+if(puntuacionActual == 0){
+
+  /////////////////////////////////////////////////////////
+const sql2=`INSERT INTO puntuaciones (nombre_de_usuario,puntuacion,producto_id)
+VALUES (?,?,?)`;
+
+db.run(sql2,[UserName,puntuacion,idProducto],(e)=>{
+
+if(e) return console.log(e.message);
+
+const sql3 = `SELECT * FROM puntuaciones WHERE producto_id = ?`;
+        db.get(sql3, [idProducto], (errorNew, datosNew) => {
+
+          if (errorNew) return console.error(errorNew.message);
+          
+          console.log('Puntuación agregada:', puntuacion);
+
+          res.json({puntuacion: datosNew.puntuacion});
+        });
+
+});
+
+}else{
+
+    if(datos.nombre_de_usuario == UserName && datos.producto_id == idProducto){
+      console.log(`El usuario ${UserName} ya califico el producto`);
+     res.json({interruptor:true});
+    }else{
+     
+     // Actualizar la puntuación en la base de datos
+    const sqlUpdate = `UPDATE puntuaciones SET puntuacion = ?,nombre_de_usuario = ? WHERE producto_id = ?`;
+    db.run(sqlUpdate, [nuevaPuntuacion,UserName,idProducto], errorUpdate => {
+      if (errorUpdate) return console.error(errorUpdate.message);
+
+      console.log(`Puntuación actualizada: ${nuevaPuntuacion}`);
+
+      // Enviar la nueva puntuación al frontend
+      res.json({ puntuacion: nuevaPuntuacion,interruptor:false});
+    });
+
+    }
+    
+
+}
+
+///////////////////////////////////////////////////////
+
+});
+
+}
+
+
+function enviarEmailRecuperacion(req,res){
+  const email = req.body.email;
+// Generar un token único
+  const token = crypto.randomBytes(20).toString('hex');
+
+  // Almacenar el token en tu base de datos o en una estructura de datos adecuada junto con la información del usuario
+ res.cookie('securityToken',token, { httpOnly: true, secure: true });
+
+  // Crear la URL de recuperación de contraseña
+  const recovery = `http://ventasonlinerandis.onrender.com/restablecer-contrasena?token=${token}`;
+
+  // Enviar el correo electrónico de recuperación de contraseña
+  const mailOptions = {
+    from: 'angelguillermocuttdiaz@gmail.com',
+    to: email,
+    subject: 'Restablecimiento de contraseña',
+    text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${recovery}`
+  };
+
+  transporter2.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.send('Error al enviar el correo electrónico de recuperación de contraseña');
+    } else {
+      console.log('Correo electrónico de recuperación de contraseña enviado:', info.response);
+    }
+
+});
+ res.redirect('/loginUsers');
+}
+//////////////////////////////////////////////////////////////
+function restablecerPost(req,res){
+
+const {passwordC,userName} = req.body;
+
+const sqlB = `SELECT * FROM usuarios`;
+
+db.all(sqlB,[],(er,d)=>{
+ if(er) return console.error(e.message);
+ console.log(d,'usuarios desde restablecer');
+
+ const sql = `UPDATE usuarios SET password = ? WHERE nombre = ?`;
+db.run(sql,[passwordC,userName],e=>{
+
+ if(e){
+  console.error(e.message);
+ }else{
+  res.redirect('/loginUsers');
+ }
+
+})
+
+});
+
+
+
+}
 //--------------------------------------------------
 
 //_-------------------------------------------------
@@ -621,6 +869,9 @@ module.exports={
  updateUser,
  updateUserPost,
  deleteUser,
- deleteCompra
+ deleteCompra,
+ puntuaciones,
+ enviarEmailRecuperacion,
+ restablecerPost
 }
 

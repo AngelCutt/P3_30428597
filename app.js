@@ -77,7 +77,14 @@ app.get('/',(req,res)=>{
 });
 
 app.get('/login',(req,res)=>{
-res.render('iniciarSesion.ejs');
+res.render('iniciarSesion.ejs',{
+  og: {
+      title: 'Limpieza',
+      description: 'Venta de productos de limpieza',
+      image: 'https://www.pexels.com/es-es/foto/persona-sosteniendo-un-smartphone-android-samsung-blanco-6347724/',
+      // Otros metadatos OGP que desees especificar
+      }
+});
 });
 
 
@@ -260,7 +267,7 @@ app.get('/comprar/:id',verifyToken,(req,res)=>{
   baseDatos.comprar(req,res);
 });
 //------------------------------------------------------
-app.post('/comprarPost',async (req,res)=>{
+app.post('/comprarPost',verifyToken,async (req,res)=>{
 baseDatos.comprarPOST(req,res);
 })
 //------------------------------------------------------
@@ -314,6 +321,47 @@ baseDatos.deleteUser(req,res);
 app.get('/deleteCompra/:id',(req,res)=>{
 baseDatos.deleteCompra(req,res);
 })
+//------------------------------------------------------
+app.post('/puntuaciones',verifyToken,(req,res)=>{
+baseDatos.puntuaciones(req,res);
+});
+//------------------------------------------------------
+app.get('/recuperarPassword',(req,res)=>{
+res.render('recuperarPassword.ejs',{
+  og: {
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }
+});
+});
+//------------------------------------------------------
+app.post('/recuperarPassword',(req,res)=>{
+baseDatos.enviarEmailRecuperacion(req,res);
+});
+//------------------------------------------------------
+app.get('/restablecer-contrasena',(req,res)=>{  
+
+const token = req.query.token;
+
+console.log(token,'token');
+
+
+res.render('restablecer.ejs',{og:{
+      title: 'LimpiezaAbsoluta',
+      description: 'Venta de Productos de limpieza',
+      image: 'https://images.pexels.com/photos/10557898/pexels-photo-10557898.jpeg?auto=compress&cs=tinysrgb&w=400',
+      // Otros metadatos OGP que desees especificar
+      }});
+
+});
+//------------------------------------------------------
+app.post('/restablecer-contrasena',(req,res)=>{
+
+baseDatos.restablecerPost(req,res);
+
+});
 //------------------------------------------------------
 //logout cliente
 app.get('/logout',(req, res) => {

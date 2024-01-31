@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Limpieza</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="img/limpieza.png" />
     <!-- Font Awesome icons (free version)-->
@@ -16,6 +15,49 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link rel="stylesheet" type="text/css" href="/css/clientes.css">
     <script type="text/javascript" src="/js/alert.js"></script>
+    <title><%= og.title %></title>
+    <meta name="description" content="<%= og.description %>">
+    <meta property="og:title" content="<%= og.title %>">
+    <meta property="og:description" content="<%= og.description %>">
+    <meta property="og:image" content="<%= og.image %>">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDYBWY97KW"></script>
+    <!--Google Analytics-->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-WDYBWY97KW');
+</script>
+<!--Schema Markup-->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Limpieza",
+    "datePublished": "2024-01-15",
+    "author": {
+      "@type":"Person",
+      "name": "Angel Cutt"
+  },
+  "publisher":{
+      "@type": "Organization",
+      "name": "productClean",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://images.pexels.com/photos/4440533/pexels-photo-4440533.jpeg?auto=compress&cs=tinysrgb&w=400"
+    }
+},
+"image": {
+  "@type": "ImageObject",
+  "url": "https://images.pexels.com/photos/4440533/pexels-photo-4440533.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "width": "700",
+  "height": "500"
+},
+"description": "Productos de limpieza con la mas alta eficiencia"
+}
+</script>
 </head>
 <body>
     <div class='clasePadre'>
@@ -47,11 +89,11 @@
 
             <div class='imagenesVertical'>
 
-               <p>P</p><p>r</p><p>o</p><p>d</p><p>u</p><p>c</p><p>t</p><p>o</p><p>s</p> 
+             <p>P</p><p>r</p><p>o</p><p>d</p><p>u</p><p>c</p><p>t</p><p>o</p><p>s</p> 
 
-           </div>
+         </div>
 
-           <div class='imagenesVertical'>
+         <div class='imagenesVertical'>
             <p>L</p><p>i</p><p>m</p><p>p</p><p>i</p><p>e</p><p>z</p><p>a</p>
         </div>
 
@@ -74,13 +116,22 @@
 
 
 <section class="section">
+    <div class='ordenamiento'>
+      <p>Filtro para ordenar :</p>
+      <button id='ordenarBtn'>Ascendente</button>   
+      <button id='ordenarBtn2'>Descendente</button>     
+    </div>
     <h2 id='productosH2'>PRODUCTOS</h2>
     <div class="my-5">
         <div class="row justify-content-center">
 
-           <button id='botonCuadricula' style='width:5vw;background:transparent;margin-left:5%;border:none;margin-bottom:20px;' onClick="cuadricula()"><img src="/img/menu.png" class='botonC'></button>
+         <button id='botonCuadricula' style='width:5vw;background:transparent;margin-left:5%;border:none;margin-bottom:20px;' onClick="cuadricula()"><img src="/img/menu.png" class='botonC'></button>
+         
+         <div id='co'>
+                
+         </div>
 
-           <div class='product' id='listaDeProductos'>
+         <div class='product' id='listaDeProductos'>
 
             <%for(let x = 0;x < producto.length;x++){%>
 
@@ -93,35 +144,64 @@
 
                     <div id='NPB'>
 
-                       <div style='display:flex;flex-direction: column;justify-content:center;align-items:center'>
+                     <div style='display:flex;flex-direction: column;justify-content:center;align-items:center'>
                         <strong><p>Nombre:</strong><%= producto[x].nombre %></p>
                         <strong><p>Precio: </strong><span style='color:green'><%= producto[x].precio %> $</span></p>
 
                     </div>
 
-                    <div id='comprarDetalles'>
+                    <div class='comprarDetalles'>
+                     
+                <div style='display:flex;justify-content: center;align-items:center'>
+                    <a href="/comprar/<%=producto[x].producto_id%>"><img src="/img/carrito.png" width="30"></a>
 
-                       <a href="/comprar/<%=producto[x].producto_id%>"><img src="/img/carrito.png" class='imgCarrito' width="30"></a>
+                     <a href="/detalles/<%=producto[x].producto_id%>" style='margin-top:7px;margin-left:8px;'><img src="/img/img.png" width="30"></a> 
+                </div>
+                     
 
-                       <a href="/detalles/<%=producto[x].producto_id%>" style='margin-top:7px;margin-left:8px;'><img src="/img/img.png" width="30"></a> 
+                     <div class='contenedorPuntuacion'>
+
+                   <p class="puntuacion" data-producto_id='<%=producto[x].producto_id%>' data-puntuacion='<%=producto[x].puntuacion%>'><% if(producto[x].puntuacion !== null){ %>
+                    Puntuación Total: <%=producto[x].puntuacion%>
+                   <% }else{%>
+                    Sin Puntuación
+                   <% } %> 
+                   </p>
+
 
                    </div>
 
+            
+
+                   <div class='estrellas'>
+                     <img src="/img/punto.png" width="20" class="estrella" data-valor='1' title="1">
+                     
+                     <img src="/img/punto.png" width="20" class="estrella" data-valor='2' title="2">
+
+                     <img src="/img/punto.png" width="20" class="estrella" data-valor='3' title="3">
+
+                     <img src="/img/punto.png" width="20" class="estrella" data-valor='4' title="4">
+
+                     <img src="/img/punto.png" width="20" class="estrella" data-valor='5' data-producto_id='<%=producto[x].producto_id%>' title="5"> 
+                 </div>   
+
+                 </div>
 
 
 
-               </div>
+
+             </div>
 
 
 
-           </div>
+         </div>
 
 
 
-       </div>
-       <% } %>
-       <!-------------------->
-       <table class='table'>
+     </div>
+     <% } %>
+     <!-------------------->
+     <table class='table'>
 
         <thead>
             <tr style='border:1px solid black'>
@@ -175,11 +255,11 @@
                 <a href="/comprar/<%=producto[l].producto_id%>"><img src="/img/carrito.png" class='imgCarrito' width="30"></a>
             </div>
             <div style='display:flex;justify-content:center;align-items:center;width:20%;'>
-               <a href="/detalles/<%=producto[l].producto_id%>" style='margin-top:7px;margin-left:8px;'><img src="/img/lista.png" style='width:100%;'></a>
-           </div>
-       </li>
-   </ul>
-   <% } %>
+             <a href="/detalles/<%=producto[l].producto_id%>" style='margin-top:7px;margin-left:8px;'><img src="/img/lista.png" style='width:100%;'></a>
+         </div>
+     </li>
+ </ul>
+ <% } %>
 </div>
 
 </div>
@@ -189,32 +269,34 @@
 
 
 </section>
-
+<script type="text/javascript" src='/js/ascendente.js'></script>
+<script type="text/javascript" src='/js/descendente.js'></script>
+<script type="text/javascript" src='/js/puntuaciones.js'></script>
 <script type="text/javascript">
-     fetch('/transaction')
-    .then(res=>res.json())
-    .then(respuesta=>{
-        if(respuesta.message !== false){
-         console.log(respuesta);
-           Swal.fire(respuesta.transaction.message)
+   fetch('/transaction')
+   .then(res=>res.json())
+   .then(respuesta=>{
+    if(respuesta.message !== false){
+       console.log(respuesta);
+       Swal.fire(respuesta.transaction.message)
 
-           .then(() =>{
+       .then(() =>{
         // Aquí la alerta se ha cerrado
-            console.log("Alerta cerrada");
-            fetch('/eliminarTransaction')
-            .then(res=> res.json())
-            .then(respuesta2=>{
+        console.log("Alerta cerrada");
+        fetch('/eliminarTransaction')
+        .then(res=> res.json())
+        .then(respuesta2=>{
             console.log(`Message : ${respuesta2.message}`);
-            })
-            .catch(error => {
+        })
+        .catch(error => {
                console.error('*_*/-[Error]-/*_*:', error);
-             });
-        }); 
+        });
+    }); 
 
-           console.log(respuesta.transaction.message,'respuesta del server');  
-       }else{
-        console.log('No se recibio respuesta of the transaction'); 
-    }
+       console.log(respuesta.transaction.message,'respuesta del server');  
+   }else{
+    console.log('No se recibio respuesta of the transaction'); 
+}
 
 })
 </script>
