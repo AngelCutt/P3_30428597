@@ -457,7 +457,7 @@ function registroUsuariosPost(req,res){
   from:'angelguillermocuttdiaz@gmail.com',
   to:email,
   subject:'!Bienvenido¡',
-  text:`Hola ${nombre} ${apellido}, !Te damos la Bienvenida a una de las mejores páginas de venta y compra de Smarphone, donde podras encontrar gran variedad de productos y marcas¡`
+  text:`Hola ${nombre} ${apellido}, !Te damos la Bienvenida y a su vez te ofrecemos la oportunidad de comprar productos de limpieza con la mejor calidad¡`
   }
 
   transporter.sendMail(mensaje,(error,info)=>{
@@ -602,7 +602,7 @@ db.run(sql,[nombre_de_usuario,apellido,cedula,telefono,cliente_id,producto_id,ca
     from: 'angelguillermocuttdiaz@gmail.com', // Reemplaza con tu dirección de correo electrónico
     to: destinatario, // Reemplaza con la dirección de correo del cliente
     subject:'Mensaje de confirmación', // Reemplaza con el asunto del correo electrónico
-    text: 'Compra realizada de manera exitosa desde nuestra grandiosa pagina web' // Reemplaza con el contenido del correo electrónico en texto sin formato
+    text: 'Compra realizada de manera exitosa desde la pagina limpieza Absoluta' // Reemplaza con el contenido del correo electrónico en texto sin formato
   };
 
   // Envía el correo electrónico
