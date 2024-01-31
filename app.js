@@ -5,7 +5,7 @@ const path = require('path');
 require('dotenv').config();
 var handlebars = require('express-handlebars')
 const Recaptcha = require('express-recaptcha').RecaptchaV2;
-const recaptcha = new Recaptcha('6LcP7EkpAAAAADhHkaAuLH8jC4G3Mp04NgwBgacw', '6LcP7EkpAAAAAGBhwpe7GvkNtCQN9q3Wc5Ma7Nvx');
+const recaptcha = new Recaptcha('6LcvqGIpAAAAAGthpbhBo98IRwpnkozA78Nu-riA', '6LcvqGIpAAAAAN7niBkWLdteLpAOlAsuAhgGkrEA');
 const multer = require('multer');
 const http = require('http');
 const express = require('express');
